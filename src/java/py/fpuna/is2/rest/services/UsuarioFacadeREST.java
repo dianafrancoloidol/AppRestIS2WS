@@ -1,7 +1,9 @@
 package py.fpuna.is2.rest.services;
 
+import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -75,14 +77,18 @@ public class UsuarioFacadeREST extends AbstractFacade<Usuario> {
         return super.findAll();
     }
 
-    @GET
-    @Path("consultar_por_email/{email}")
+    @POST
+    @Path("validarUsuario")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Usuario findByEmail(@PathParam("email") String email) {
+    public Usuario findByEmail(String email) {
 
+        Gson json = new Gson();
+        Properties properties = json.fromJson(email,Properties.class);
+        String pEmail = (properties.getProperty("email") != null)? properties.getProperty("email").trim().toLowerCase():"";
         Query query = em
                 .createQuery("SELECT u FROM Usuario u WHERE u.email LIKE :email")
-                .setParameter("email", email.trim().toLowerCase())
+                .setParameter("email", pEmail)
                 .setMaxResults(1);
 
         Usuario usuario = null;
