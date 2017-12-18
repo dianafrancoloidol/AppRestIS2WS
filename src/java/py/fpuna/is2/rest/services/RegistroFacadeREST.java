@@ -83,7 +83,7 @@ public class RegistroFacadeREST extends AbstractFacade<Registro> {
             return new ArrayList<>();
         }
 
-        Query query = em.createQuery("SELECT r FROM Registro r WHERE r.idHijo = :id_hijo")
+        Query query = em.createQuery("SELECT r FROM Registro r WHERE r.idHijo = :id_hijo ORDER BY r.fecha")
                 .setParameter("id_hijo", hijo);
         List<Registro> list = query.getResultList();
         return list;
